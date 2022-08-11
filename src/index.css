@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Otomanopee+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Otomanopee+One&family=Permanent+Marker&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.jap-font {
+    font-family: 'Otomanopee One', sans-serif;
+}
+
+.img {
+    filter: drop-shadow(0px 0px 5px black);
+}
+
+.jap-font-num{
+    font-family: 'Permanent Marker', cursive;
+}
+.moving-background {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+     background-image: url("src/assets/background/bg.jpg"); 
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 100% 40%;
+}
