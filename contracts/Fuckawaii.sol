@@ -7,19 +7,22 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/Address.sol"; 
 
-contract Sqoud is ERC721A, Ownable, ReentrancyGuard {
+contract Fuckawaii is ERC721A, Ownable, ReentrancyGuard {
   using Address for address;
   using Strings for uint;
 
-  string  public  baseTokenURI = "ipfs://QmPvJb5v53zx4ZEdZNBoj6kGovhAYXCe2YDcvQUnrUAnDT";
+  string  public  baseTokenURI = "ipfs://QmRErYw8fGJbX4NPNyx3GrDZGct2dscNUS9CcNJ3ZQmuBr";
 
-  uint256 public  maxSupply = 9334;
-  uint256 public  PUBLIC_SALE_PRICE = 0.005 ether;
+  uint256 public  maxSupply = 5555;
+  uint256 public  MAX_MINTS_PER_TX = 20;
+  uint256 public  FREE_MINTS_PER_TX = 2;
+  uint256 public  PUBLIC_SALE_PRICE = 0.009 ether;
+  uint256 public  TOTAL_FREE_MINTS = 5555;
   bool public isPublicSaleActive = true;
 
   constructor(
 
-  ) ERC721A("Squod", "SQU") {
+  ) ERC721A("Fuckawaii", "FCK") {
 
   }
 
@@ -28,13 +31,24 @@ contract Sqoud is ERC721A, Ownable, ReentrancyGuard {
       payable
   {
     require(isPublicSaleActive, "Public sale is not open");
-    require(totalSupply() + numberOfTokens <= maxSupply );
-    require((PUBLIC_SALE_PRICE * numberOfTokens) <= msg.value, "Incorrect ETH value sent" );
+
+    if(totalSupply() + numberOfTokens > TOTAL_FREE_MINTS || numberOfTokens > FREE_MINTS_PER_TX){
+        require(
+            (PUBLIC_SALE_PRICE * numberOfTokens) <= msg.value,
+            "Incorrect ETH value sent"
+        );
+    }
     _safeMint(msg.sender, numberOfTokens);
   }
 
+  function setBaseURI(string memory baseURI)
+    public
+    onlyOwner
+  {
+    baseTokenURI = baseURI;
+  }
 
- function treasuryMint(uint quantity, address user)
+  function treasuryMint(uint quantity, address user)
     public
     onlyOwner
   {
@@ -48,15 +62,6 @@ contract Sqoud is ERC721A, Ownable, ReentrancyGuard {
     );
     _safeMint(user, quantity);
   }
-
-
-  function setBaseURI(string memory baseURI)
-    public
-    onlyOwner
-  {
-    baseTokenURI = baseURI;
-  }
-
 
   function withdraw()
     public
@@ -97,6 +102,12 @@ contract Sqoud is ERC721A, Ownable, ReentrancyGuard {
       isPublicSaleActive = _isPublicSaleActive;
   }
 
+  function setNumFreeMints(uint256 _numfreemints)
+      external
+      onlyOwner
+  {
+      TOTAL_FREE_MINTS = _numfreemints;
+  }
 
   function setSalePrice(uint256 _price)
       external
@@ -105,6 +116,11 @@ contract Sqoud is ERC721A, Ownable, ReentrancyGuard {
       PUBLIC_SALE_PRICE = _price;
   }
 
-
+  function setMaxLimitPerTransaction(uint256 _limit)
+      external
+      onlyOwner
+  {
+      MAX_MINTS_PER_TX = _limit;
+  }
 
 }
